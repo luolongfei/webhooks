@@ -21,7 +21,7 @@ const logger = log4js.getLogger();*/
 
 /**
  * 处理器
- * 支持多个处理器，约定：path为[/仓库名]，secret分别改为各个仓库正确的配置
+ * 支持多个处理器，约定：path为[/仓库名]，secret分别改为各个仓库正确的配置，每个回调触发执行的脚本以[仓库名_callback.sh]命名
  *
  * @type {handler}
  */
@@ -58,24 +58,13 @@ handler.on('error', function (err) {
  * 收到push时触发
  */
 handler.on('push', function (event) {
-    console.log('收到push');
-    console.log(event);
-    let path = event.path;
-    switch (path) {
-        case '/app1':
-            break;
-        case '/app2':
-            break;
-        default:
-            break;
-    }
-
-    fs.access('./auto_build.sh', fs.constants.R_OK, (err) => { // 检查文件是否可读
+    let shellFile = './shell/' + event.payload.repository.name + '_callback.sh';
+    fs.access(shellFile, fs.constants.R_OK, (err) => { // 检查文件是否可读
         if (err) {
-            console.error('文件不存在');
+            console.error(shellFile + '文件不存在');
         } else {
             // 执行指定的shell文件
-            runCommand('sh', ['./auto_build.sh'], function (txt) {
+            runCommand('sh', [shellFile], function (txt) {
                 console.log(txt);
             });
         }

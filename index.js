@@ -58,6 +58,7 @@ handler.on('error', function (err) {
  * 收到push时触发
  */
 handler.on('push', function (event) {
+    console.log('收到push');
     console.log(event);
     let path = event.path;
     switch (path) {

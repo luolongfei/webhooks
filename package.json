@@ -1,0 +1,23 @@
+{
+  "name": "webhooks",
+  "version": "1.0.0",
+  "description": "针对GitHub的钩子，收到推送后触发自动部署。",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luolongfei/webhooks.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/luolongfei/webhooks/issues"
+  },
+  "homepage": "https://github.com/luolongfei/webhooks#readme",
+  "dependencies": {
+    "github-webhook-handler": "^1.0.0"
+  }
+}

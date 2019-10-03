@@ -2,7 +2,7 @@ const http = require('http');
 const spawn = require('child_process').spawn;
 const createHandler = require('github-webhook-handler');
 const fs = require('fs');
-const log4js = require('log4js');
+/*const log4js = require('log4js');
 log4js.configure({ // 日志配置
     appenders: {
         file: {
@@ -17,7 +17,7 @@ log4js.configure({ // 日志配置
         }
     }
 });
-const logger = log4js.getLogger();
+const logger = log4js.getLogger();*/
 
 /**
  * 处理器
@@ -58,8 +58,7 @@ handler.on('error', function (err) {
  * 收到push时触发
  */
 handler.on('push', function (event) {
-    logger.info(`Received a push event for ${event.payload.repository.name} to ${event.payload.ref}`);
-    logger.debug(event);
+    console.log(event);
     let path = event.path;
     switch (path) {
         case '/app1':
@@ -72,11 +71,11 @@ handler.on('push', function (event) {
 
     fs.access('./auto_build.sh', fs.constants.R_OK, (err) => { // 检查文件是否可读
         if (!err) {
-            logger.error('文件不存在');
+            console.error('文件不存在');
         } else {
             // 执行指定的shell文件
             runCommand('sh', ['./auto_build.sh'], function (txt) {
-                logger.info(txt);
+                console.log(txt);
             });
         }
     });

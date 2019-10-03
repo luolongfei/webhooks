@@ -1,8 +1,40 @@
-var http = require('http');
-var spawn = require('child_process').spawn;
-var createHandler = require('github-webhook-handler');
-var handler = createHandler({path: '/', secret: 'rAfK2rr7^R28#h$A'});
-var fs = require('fs');
+const http = require('http');
+const spawn = require('child_process').spawn;
+const createHandler = require('github-webhook-handler');
+const fs = require('fs');
+const log4js = require('log4js');
+log4js.configure({ // 日志配置
+    appenders: {
+        file: {
+            type: 'file',
+            filename: 'app.log'
+        }
+    },
+    categories: {
+        default: {
+            appenders: ['file'],
+            level: 'debug'
+        }
+    }
+});
+const logger = log4js.getLogger();
+
+/**
+ * 处理器
+ * 支持多个处理器，约定：path为[/仓库名]，secret分别改为各个仓库正确的配置
+ *
+ * @type {handler}
+ */
+const handler = createHandler([
+    {
+        path: '/money',
+        secret: 'rAfK2rr7^R28#h$A'
+    },
+    {
+        path: '/app2',
+        secret: 'secret2'
+    }
+]);
 
 /**
  * 创建服务
@@ -26,16 +58,28 @@ handler.on('error', function (err) {
  * 收到push时触发
  */
 handler.on('push', function (event) {
-    console.log('Received a push event for %s to %s',
+    logger.info('Received a push event for %s to %s',
         event.payload.repository.name,
-        event.payload.ref);
+        event.payload.ref); // logger.info(`Received a push event for ${event.payload.repository.name} to ${event.payload.ref}`);
+
+    logger.debug(event);
+    let path = event.path;
+    switch (path) {
+        case '/app1':
+            break;
+        case '/app2':
+            break;
+        default:
+            break;
+    }
 
     fs.access('./auto_build.sh', fs.constants.R_OK, (err) => { // 检查文件是否可读
-        console.log(`${err ? 'shell文件不存在' : '检查通过'}`);
         if (!err) {
+            logger.error('文件不存在');
+        } else {
             // 执行指定的shell文件
             runCommand('sh', ['./auto_build.sh'], function (txt) {
-                console.log(txt);
+                logger.info(txt);
             });
         }
     });
@@ -56,7 +100,7 @@ handler.on('push', function (event) {
  * @param callback
  */
 function runCommand(cmd, args, callback) {
-    var child = spawn(cmd, args);
+    let child = spawn(cmd, args);
     child.stdout.on('data', function (buffer) {
         resp += buffer.toString();
     });

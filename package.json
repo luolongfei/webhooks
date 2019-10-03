@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/luolongfei/webhooks#readme",
   "dependencies": {
-    "github-webhook-handler": "^1.0.0"
+    "github-webhook-handler": "^1.0.0",
+    "log4js": "^5.1.0"
   }
 }

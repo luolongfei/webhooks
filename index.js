@@ -71,7 +71,7 @@ handler.on('push', function (event) {
     }
 
     fs.access('./auto_build.sh', fs.constants.R_OK, (err) => { // 检查文件是否可读
-        if (!err) {
+        if (err) {
             console.error('文件不存在');
         } else {
             // 执行指定的shell文件

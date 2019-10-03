@@ -58,10 +58,7 @@ handler.on('error', function (err) {
  * 收到push时触发
  */
 handler.on('push', function (event) {
-    logger.info('Received a push event for %s to %s',
-        event.payload.repository.name,
-        event.payload.ref); // logger.info(`Received a push event for ${event.payload.repository.name} to ${event.payload.ref}`);
-
+    logger.info(`Received a push event for ${event.payload.repository.name} to ${event.payload.ref}`);
     logger.debug(event);
     let path = event.path;
     switch (path) {

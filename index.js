@@ -2,22 +2,26 @@ const http = require('http');
 const spawn = require('child_process').spawn;
 const createHandler = require('github-webhook-handler');
 const fs = require('fs');
-/*const log4js = require('log4js');
-log4js.configure({ // 日志配置
+
+/**
+ * 日志记录
+ */
+const log4js = require('log4js');
+log4js.configure({
     appenders: {
-        file: {
+        cheese: {
             type: 'file',
-            filename: 'app.log'
+            filename: 'web_hooks.log'
         }
     },
     categories: {
         default: {
-            appenders: ['file'],
-            level: 'debug'
+            appenders: [],
+            level: 'info'
         }
     }
 });
-const logger = log4js.getLogger();*/
+const logger = log4js.getLogger();
 
 /**
  * 处理器

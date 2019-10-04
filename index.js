@@ -43,7 +43,7 @@ handler.on('error', function (err) {
  */
 handler.on('push', function (event) {
     let shellFile = './shell/' + event.payload.repository.name + '_callback.sh';
-    
+
     fs.access(shellFile, fs.constants.R_OK, (err) => { // 检查文件是否可读
         if (err) {
             console.error(shellFile + '文件不存在');

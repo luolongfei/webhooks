@@ -4,26 +4,6 @@ const createHandler = require('github-webhook-handler');
 const fs = require('fs');
 
 /**
- * 日志记录
- */
-const log4js = require('log4js');
-log4js.configure({
-    appenders: {
-        cheese: {
-            type: 'file',
-            filename: 'web_hooks.log'
-        }
-    },
-    categories: {
-        default: {
-            appenders: [],
-            level: 'info'
-        }
-    }
-});
-const logger = log4js.getLogger();
-
-/**
  * 处理器
  * 支持多个处理器，约定：path为[/仓库名]，secret分别改为各个仓库正确的配置，每个回调触发执行的脚本以[仓库名_callback.sh]命名
  *
@@ -63,6 +43,7 @@ handler.on('error', function (err) {
  */
 handler.on('push', function (event) {
     let shellFile = './shell/' + event.payload.repository.name + '_callback.sh';
+    
     fs.access(shellFile, fs.constants.R_OK, (err) => { // 检查文件是否可读
         if (err) {
             console.error(shellFile + '文件不存在');

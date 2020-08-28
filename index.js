@@ -47,35 +47,11 @@ handler.on('push', function (event) {
     fs.access(shellFile, fs.constants.R_OK, (err) => { // 检查文件是否可读
         if (err) {
             console.error(shellFile + '文件不存在');
+            console.log('支持多个处理器，约定：path为[/仓库名]，secret分别改为各个仓库正确的配置，每个回调触发执行的脚本以[仓库名_callback.sh]命名')
+            console.log('代码中的 event.payload.repository.name 其实是从 GitHub 传过来的，不受我们控制，是 GitHub 上的仓库名')
         } else {
             // 执行指定的shell文件
-            runCommand('sh', [shellFile], function (txt) {
-                console.log(txt);
-            });
+            spawn('sh', [shellFile])
         }
     });
 });
-
-/*handler.on('issues', function (event) {
-    console.log('Received an issue event for %s action=%s: #%d %s',
-        event.payload.repository.name,
-        event.payload.action,
-        event.payload.issue.number,
-        event.payload.issue.title);
-});*/
-
-/**
- * 执行命令
- * @param cmd
- * @param args
- * @param callback
- */
-function runCommand(cmd, args, callback) {
-    let child = spawn(cmd, args);
-    child.stdout.on('data', function (buffer) {
-        resp += buffer.toString();
-    });
-    child.stdout.on('end', function () {
-        callback(resp);
-    });
-}
